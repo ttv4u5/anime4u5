@@ -14,11 +14,11 @@ import { InstallPrompt } from "@/components/InstallPrompt.tsx";
 export default function App() {
   useServiceWorker();
   return (
-    <DefaultProviders>
-      <BrowserRouter>
+   <DefaultProviders>  {/* <--- PASTIKAN BARIS 17 INI ADA! */}
+    <BrowserRouter basename="/anime4u5">
         <Routes>
           {/* Bypass auth logic, directly render the dashboard */}
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/time-card" element={<TimeCardPage />} />
           <Route path="/travel-log" element={<TravelLogPage />} />
