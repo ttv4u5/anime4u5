@@ -1,0 +1,49 @@
+{
+  "name": "Sistem Rekod Kerajaan Malaysia",
+  "short_name": "Sistem Rekod",
+  "description": "Kad Mencatat Waktu, Log Perjalanan Kerajaan & Pengurusan Fail Rasmi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a1a",
+  "theme_color": "#0a0a1a",
+  "orientation": "any",
+  "categories": ["productivity", "utilities", "government"],
+  "lang": "ms",
+  "icons": [
+    {
+      "src": "/icon/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Kad Waktu",
+      "short_name": "Kad Waktu",
+      "description": "Rekod kehadiran kakitangan",
+      "url": "/time-card",
+      "icons": [{ "src": "/icon/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Log Perjalanan",
+      "short_name": "Log Perjalanan",
+      "description": "Rekod perjalanan rasmi kerajaan",
+      "url": "/travel-log",
+      "icons": [{ "src": "/icon/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Upload Fail",
+      "short_name": "Fail",
+      "description": "Upload resit & dokumen",
+      "url": "/files",
+      "icons": [{ "src": "/icon/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
