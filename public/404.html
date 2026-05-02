@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Laluan Terputus</title>
+    <!-- Font Orbitron untuk gaya futuristic -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script type="text/javascript">
+      // TRIK KHAS GITHUB PAGES: Mengelakkan Error 404 terus ke skrin putih
+      var segmentCount = 1; // Set 1 jika link anda ttv4u5.github.io/anime4u5/
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?p=/' +
+        l.pathname.split('/').slice(1 + segmentCount).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Orbitron", sans-serif;
+        background: #050505;
+        background-image: 
+            radial-gradient(circle at 50% 50%, #f9731610 0%, transparent 80%),
+            linear-gradient(rgba(10, 10, 26, 0.9), rgba(10, 10, 26, 0.9)),
+            url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070&auto=format&fit=crop'); /* Gambar background tech */
+        background-size: cover;
+        background-position: center;
+        color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      .container {
+        max-width: 600px;
+        position: relative;
+        z-index: 10;
+        padding: 2rem;
+        background: rgba(10, 10, 10, 0.8);
+        border: 1px solid #f9731630;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+      }
+
+      .anime-gfx {
+        width: 250px;
+        height: 250px;
+        margin: 0 auto 1.5rem;
+        background: url('https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=f97316'); /* Avatar placeholder style anime */
+        background-size: contain;
+        background-repeat: no-repeat;
+        filter: drop-shadow(0 0 20px #f97316);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      /* Animasi terapung */
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(2deg); }
+      }
+
+      .error-code {
+        font-size: 5rem;
+        font-weight: 900;
+        color: #f97316;
+        text-shadow: 0 0 20px #f97316, 0 0 40px #f9731650;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: #888;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.8rem 2.5rem;
+        background: linear-gradient(45deg, #f97316, #ea580c);
+        color: #000;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 800;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        transition: 0.3s;
+        box-shadow: 0 0 20px #f9731640;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px #f97316;
+        background: #fff;
+      }
+
+      .glitch-line {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #f97316, transparent);
+        margin-bottom: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Gambar Anime / Avatar -->
+      <div class="anime-gfx"></div>
+      
+      <div class="error-code">404</div>
+      <h1>Laluan Tidak Dijumpai</h1>
+      <div class="glitch-line"></div>
+      
+      <p>
+        Maaf Tuan Super Admin, portal yang anda cuba akses telah terputus atau tidak wujud dalam pangkalan data kami.
+      </p>
+      
+      <a href="/anime4u5/" class="btn">Kembali Ke Pangkalan</a>
+    </div>
+
+    <!-- Skrip tambahan untuk hiasan partikel malap -->
+    <script>
+      // Boleh tambah logic hiasan jika perlu
+    </script>
+  </body>
+</html>
