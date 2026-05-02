@@ -6,6 +6,7 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/anime4u5/', // <--- TAMBAH LINE NI KAT SINI
   server: {
     host: "0.0.0.0",
     port: 5173,
