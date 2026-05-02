@@ -1,167 +1,101 @@
-import { useQuery, useMutation } from "convex/react";
-import { Authenticated, Unauthenticated } from "@/lib/auth-components.tsx";
-import { motion } from "motion/react";
-import { api } from "@/convex/_generated/api.js";
-import type { Doc, Id } from "@/convex/_generated/dataModel.d.ts";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import AppLayout from "@/components/AppLayout.tsx";
-import { SignInButton } from "@/components/ui/signin.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { Shield, UserCog, Star, Zap } from "lucide-react";
-import { toast } from "sonner";
+import { Loader2, ShieldCheck, Users, Search } from "lucide-react";
 
-type User = Doc<"users">;
+export default function AdminPage() {
+  const [session, setSession] = useState<any>(null);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-function AdminInner() {
-  const currentUser = useQuery(api.users.getCurrentUser, {});
-  const allUsers = useQuery(api.users.getAllUsers, currentUser?.role === "superadmin" ? {} : "skip");
-  const setRole = useMutation(api.users.setUserRole);
+  useEffect(() => {
+    async function getInitialData() {
+      // 1. Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
 
-  if (currentUser?.role !== "superadmin") {
+      if (session?.user) {
+        // 2. Check if current user is super_admin
+        const { data: profile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile?.role === 'super_admin') {
+          setIsSuperAdmin(true);
+          // 3. Fetch all users for admin to see
+          const { data: allUsers } = await supabase
+            .from('users')
+            .select('*')
+            .order('name', { ascending: true });
+          setUsers(allUsers || []);
+        }
+      }
+      setLoading(false);
+    }
+
+    getInitialData();
+  }, []);
+
+  if (loading) return <div className="flex h-screen items-center justify-center"><Loader2 className="animate-spin text-primary" size={48} /></div>;
+
+  if (!isSuperAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4 text-center">
-        <Shield size={64} className="text-muted-foreground opacity-30" />
-        <h2 className="text-xl font-bold text-muted-foreground">Akses Ditolak • Access Denied</h2>
-        <p className="text-sm text-muted-foreground">Halaman ini hanya untuk Super Admin</p>
-        <p className="text-xs text-muted-foreground">This page is for Super Admin only</p>
-      </div>
+      <AppLayout>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+          <ShieldCheck size={64} className="text-red-500 opacity-50" />
+          <h2 className="text-2xl font-bold">Akses Disekat • Access Denied</h2>
+          <p className="text-muted-foreground">Hanya Super Admin sahaja boleh mengakses halaman ini.</p>
+        </div>
+      </AppLayout>
     );
   }
 
-  const handleSetRole = async (userId: Id<"users">, role: string) => {
-    try {
-      await setRole({ targetUserId: userId, role });
-      toast.success(`Peranan dikemas kini • Role updated to ${role}`);
-    } catch {
-      toast.error("Gagal kemas kini peranan • Failed to update role");
-    }
-  };
-
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold shimmer-text flex items-center gap-2" style={{ fontFamily: "Orbitron, sans-serif" }}>
-          <Shield size={24} /> PANEL SUPER ADMIN
-        </h1>
-        <p className="text-muted-foreground text-sm">Super Admin Panel • Pengurusan Pengguna</p>
-      </div>
-
-      {/* Current user badge */}
-      <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 flex items-center gap-3 glow-box-orange">
-        <Star size={20} className="text-primary" />
-        <div>
-          <div className="font-bold text-primary text-sm">Anda adalah Super Admin • You are Super Admin</div>
-          <div className="text-xs text-muted-foreground">{currentUser?.email}</div>
+    <AppLayout>
+      <div className="p-4 md:p-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold" style={{ fontFamily: "Orbitron, sans-serif" }}>Panel Pentadbiran</h1>
+            <p className="text-muted-foreground text-sm">Urus maklumat pengguna dan peranan sistem</p>
+          </div>
+          <div className="bg-primary/10 text-primary px-4 py-2 rounded-lg border border-primary/20 flex gap-2 items-center">
+            <Users size={18} />
+            <span className="font-bold text-sm">{users.length} Pengguna</span>
+          </div>
         </div>
-      </div>
 
-      {/* Users table */}
-      <div className="bg-card/70 border border-border rounded-xl overflow-hidden">
-        <div className="p-4 border-b border-border flex items-center gap-2">
-          <UserCog size={18} className="text-accent" />
-          <h3 className="font-bold text-sm" style={{ fontFamily: "Orbitron, sans-serif" }}>
-            SEMUA PENGGUNA • ALL USERS ({allUsers?.length ?? 0})
-          </h3>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="anime-table w-full">
-            <thead>
+        {/* User Table */}
+        <div className="bg-card/70 border border-border rounded-xl overflow-hidden shadow-xl">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-muted/50 text-xs uppercase tracking-widest text-primary font-bold">
               <tr>
-                <th>No.</th>
-                <th>Nama</th>
-                <th>Emel</th>
-                <th>Peranan</th>
-                <th>Tindakan</th>
+                <th className="p-4 border-b border-border">Nama</th>
+                <th className="p-4 border-b border-border">Emel</th>
+                <th className="p-4 border-b border-border">Peranan</th>
+                <th className="p-4 border-b border-border">ID Unik</th>
               </tr>
             </thead>
-            <tbody>
-              {(allUsers ?? []).map((u: User, i: number) => (
-                <motion.tr
-                  key={u._id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <td className="text-center text-muted-foreground">{i + 1}</td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      {u.avatar ? (
-                        <img src={u.avatar} alt="avatar" className="w-6 h-6 rounded-full" />
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs text-primary font-bold">
-                          {u.name?.[0] ?? "U"}
-                        </div>
-                      )}
-                      <span>{u.name ?? "—"}</span>
-                    </div>
-                  </td>
-                  <td className="text-xs text-muted-foreground">{u.email ?? "—"}</td>
-                  <td>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                      u.role === "superadmin"
-                        ? "bg-primary/20 text-primary border border-primary/40"
-                        : "bg-muted text-muted-foreground"
-                    }`}>
-                      {u.role === "superadmin" ? "Super Admin" : "Pengguna"}
+            <tbody className="text-sm">
+              {users.map((u) => (
+                <tr key={u.id} className="hover:bg-primary/5 transition-colors border-b border-border/50">
+                  <td className="p-4 font-semibold">{u.name}</td>
+                  <td className="p-4 text-muted-foreground">{u.email}</td>
+                  <td className="p-4">
+                    <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${u.role === 'super_admin' ? 'bg-primary/20 text-primary' : 'bg-accent/20 text-accent'}`}>
+                      {u.role === 'super_admin' ? 'Super Admin' : 'Pengguna'}
                     </span>
                   </td>
-                  <td>
-                    <div className="flex gap-1">
-                      {u._id !== currentUser?._id && (
-                        <>
-                          {u.role !== "superadmin" ? (
-                            <Button
-                              size="sm"
-                              onClick={() => handleSetRole(u._id, "superadmin")}
-                              className="text-xs h-7 glow-box-orange"
-                            >
-                              <Shield size={12} /> Jadikan Admin
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              onClick={() => handleSetRole(u._id, "user")}
-                              className="text-xs h-7"
-                            >
-                              Tukar ke Pengguna
-                            </Button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </motion.tr>
+                  <td className="p-4 text-xs font-mono opacity-40">{u.id.substring(0, 8)}...</td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-
-      {/* Note */}
-      <div className="text-xs text-muted-foreground border border-border/50 rounded-lg p-3 bg-card/30 space-y-1">
-        <div className="font-bold text-primary">Nota Super Admin:</div>
-        <div>• Super Admin boleh melihat dan mengurus semua pengguna</div>
-        <div>• Super Admin boleh menambah Super Admin baru</div>
-        <div>• Pengguna biasa hanya boleh lihat data mereka sendiri</div>
-        <div>• Untuk menjadi Super Admin pertama: hubungi administrator sistem</div>
-      </div>
-    </div>
-  );
-}
-
-export default function AdminPage() {
-  return (
-    <AppLayout>
-      <Authenticated>
-        <AdminInner />
-      </Authenticated>
-      <Unauthenticated>
-        <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4">
-          <Zap size={48} className="text-primary animate-energy-burst" />
-          <h2 className="text-xl font-bold">Sila Log Masuk • Please Sign In</h2>
-          <SignInButton />
-        </div>
-      </Unauthenticated>
     </AppLayout>
   );
 }
