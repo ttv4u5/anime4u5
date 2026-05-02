@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiada Sambungan — Sistem Rekod</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Orbitron", "Segoe UI", sans-serif;
+        background: #0a0a1a;
+        color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        text-align: center;
+        padding: 2rem;
+      }
+      .container { max-width: 400px; }
+      .icon {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        filter: drop-shadow(0 0 20px #f97316);
+      }
+      h1 {
+        font-size: 1.5rem;
+        color: #f97316;
+        text-shadow: 0 0 15px #f97316;
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      p {
+        color: #888;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+        font-family: "Segoe UI", sans-serif;
+      }
+      .btn {
+        display: inline-block;
+        margin-top: 1.5rem;
+        padding: 0.75rem 2rem;
+        background: #f97316;
+        color: #0a0a1a;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+        box-shadow: 0 0 20px #f9731650;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .divider {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #f97316, transparent);
+        margin: 1.5rem auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="icon">⚡</div>
+      <h1>Tiada Sambungan Internet</h1>
+      <div class="divider"></div>
+      <p>App memerlukan sambungan internet untuk berfungsi.</p>
+      <p>Sila semak sambungan WiFi atau data anda.</p>
+      <p style="margin-top:0.5rem; font-size:0.8rem; color:#555;">
+        No internet connection • Please check your WiFi or mobile data
+      </p>
+      <a href="/" class="btn">Cuba Semula • Retry</a>
+    </div>
+  </body>
+</html>
